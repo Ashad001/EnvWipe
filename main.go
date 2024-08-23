@@ -30,10 +30,6 @@ func LoadConfigFile(confiFile string) error {
 		return err
 	}
 
-	if err != nil {
-		return err
-	}
-
 	return nil
 }
 
@@ -57,8 +53,6 @@ func DeleteOldEnvironments() {
 							log.Printf("Failed to delete: %s: %v\n", path, err)
 						} else {
 							log.Printf("Deleted: %s\n", path)
-							// Skip the directory contents cause we have deleted the directory
-							return filepath.SkipDir
 						}
 					}
 				}

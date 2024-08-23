@@ -5,6 +5,6 @@
     ],
     "thresholdDays": 30,
     "logDirectory": "./logs",
-    "logRetentionDays": 60
+    "logThresholdDays": 60
   }
   
