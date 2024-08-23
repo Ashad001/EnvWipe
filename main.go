@@ -57,6 +57,8 @@ func DeleteOldEnvironments() {
 							log.Printf("Failed to delete: %s: %v\n", path, err)
 						} else {
 							log.Printf("Deleted: %s\n", path)
+							// Skip the directory contents cause we have deleted the directory
+							return filepath.SkipDir
 						}
 					}
 				}
@@ -65,7 +67,6 @@ func DeleteOldEnvironments() {
 	}
 }
 
-// function with optional parameters
 func CleanUpOldLogs() {
 	now := time.Now()
 
@@ -88,7 +89,7 @@ func CleanUpOldLogs() {
 			}
 			return nil
 		})
-	
+
 }
 
 func main() {
@@ -110,16 +111,15 @@ func main() {
 		log.Fatalf("Failed to open log file: %v\n", err)
 	}
 	defer logFile.Close()
+
 	log.SetOutput(logFile)
-	
+
 	log.Println("Starting cleanup process")
-	
+
 	DeleteOldEnvironments()
 	CleanUpOldLogs()
 
 	log.Println("Cleanup process completed successfully")
 	fmt.Println("CLeanup process completed successfully, check the log file for more details")
-	
-
 
 }

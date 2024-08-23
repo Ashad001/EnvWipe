@@ -1,6 +1,7 @@
 {
     "scanDirectories": [
-      "D:/6thSem" 
+      "path/to/scan/directory1",
+      "path/to/scan/directory2" 
     ],
     "thresholdDays": 30,
     "logDirectory": "./logs",
