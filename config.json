@@ -1,0 +1,9 @@
+{
+    "scanDirectories": [
+      "D:/6thSem"
+    ],
+    "thresholdDays": 30,
+    "logDirectory": "./logs",
+    "logRetentionDays": 60
+  }
+  
