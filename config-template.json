@@ -5,6 +5,10 @@
     ],
     "thresholdDays": 30,
     "logDirectory": "./logs",
-    "logThresholdDays": 60
+    "logThresholdDays": 60,
+    "excludeDirectories": [
+      "./projects/important_project/venv",
+      "./another/path/to/scan/excluded_venv"
+    ]
   }
   

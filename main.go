@@ -11,17 +11,18 @@ import (
 )
 
 type Config struct {
-	ScanDirectories  []string `json:"scanDirectories"`
-	ThresholdDays    int      `json:"thresholdDays"`
-	LogDirectory     string   `json:"logDirectory"`
-	LogThresholdDays int      `json:"logThresholdDays"`
+	ScanDirectories  []string 	`json:"scanDirectories"`
+	ThresholdDays    int      	`json:"thresholdDays"`
+	LogDirectory     string   	`json:"logDirectory"`
+	LogThresholdDays int      	`json:"logThresholdDays"`
+	ExcludeDirectories []string `json:"excludeDirectories"`
 }
 
 var config Config
-
+	
 func LoadConfigFile(confiFile string) error {
 	file, err := ioutil.ReadFile(confiFile)
-	if err != nil {
+		if err != nil { 
 		return err
 	}
 
