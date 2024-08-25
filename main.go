@@ -7,22 +7,23 @@ import (
 	"log"
 	"os"
 	"path/filepath"
+	"strings"
 	"time"
 )
 
 type Config struct {
-	ScanDirectories  []string 	`json:"scanDirectories"`
-	ThresholdDays    int      	`json:"thresholdDays"`
-	LogDirectory     string   	`json:"logDirectory"`
-	LogThresholdDays int      	`json:"logThresholdDays"`
+	ScanDirectories    []string `json:"scanDirectories"`
+	ThresholdDays      int      `json:"thresholdDays"`
+	LogDirectory       string   `json:"logDirectory"`
+	LogThresholdDays   int      `json:"logThresholdDays"`
 	ExcludeDirectories []string `json:"excludeDirectories"`
 }
 
 var config Config
-	
+
 func LoadConfigFile(confiFile string) error {
 	file, err := ioutil.ReadFile(confiFile)
-		if err != nil { 
+	if err != nil {
 		return err
 	}
 
@@ -32,6 +33,25 @@ func LoadConfigFile(confiFile string) error {
 	}
 
 	return nil
+}
+
+func IsExcluded(path string) bool {
+	path = filepath.Clean(path)
+	for _, dir := range config.ExcludeDirectories {
+		dir = filepath.Clean(dir)
+		if path == dir || isSubdirectory(dir, path) {
+			return true
+		}
+	}
+	return false
+}
+
+func isSubdirectory(parentDir, childPath string) bool {
+	rel, err := filepath.Rel(parentDir, childPath)
+	if err != nil {
+		return false
+	}
+	return !strings.HasPrefix(rel, "..") && rel != ".."
 }
 
 func DeleteOldEnvironments() {
@@ -44,16 +64,17 @@ func DeleteOldEnvironments() {
 					log.Println(err)
 					return nil
 				}
-
+				if IsExcluded(path) {
+					log.Printf("Excluded: %s\n", path)
+					return nil
+				}
 				if info.IsDir() && (filepath.Base(path) == "venv" || filepath.Base(path) == ".venv") {
 					days := now.Sub(info.ModTime()).Hours() / 24
 					if int(days) > config.ThresholdDays {
-						log.Printf("deleteing: %s - %d days\n", path, int(days))
+						log.Printf("Deleteing: %s - %d days\n", path, int(days))
 						err := os.RemoveAll(path)
 						if err != nil {
 							log.Printf("Failed to delete: %s: %v\n", path, err)
-						} else {
-							log.Printf("Deleted: %s\n", path)
 						}
 					}
 				}

@@ -37,10 +37,11 @@ func TestDeleteOldEnvironments(t *testing.T) {
 	envs := []struct {
 		name     string
 		modTime  time.Time
-		expected bool // True if the environment should be deleted
+		expected bool // True if the environment SHOULD be deleted
 	}{
 		{"venv", oldTime, true},
-		{".venv", newTime, false},
+		{".venv", oldTime, true},
+		{"temp_env", newTime, false},
 	}
 
 	for _, env := range envs {
@@ -50,6 +51,9 @@ func TestDeleteOldEnvironments(t *testing.T) {
 	config = Config{
 		ScanDirectories: []string{tmpDir},
 		ThresholdDays:   30,
+		ExcludeDirectories: []string{
+			"temp_env",
+		},
 	}
 
 	DeleteOldEnvironments()
